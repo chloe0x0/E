@@ -47,7 +47,6 @@ void Evolve(struct Universe* universe){
 
         ruleIndex = (l*4) + (c*2) + (r);        
         newState[i] = universe->rule & (1 << ruleIndex);
-        ruleIndex = 0;
     }
     
     free(universe->state);
