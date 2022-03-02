@@ -16,6 +16,12 @@ struct Universe* ConstructUniverse(unsigned int len, uint8_t rule){
     return u;
 }
 
+// Function to free a Universe struct from memory
+void FreeUniverse(struct Universe* universe){
+    free(universe->state);
+    free(universe);
+}
+
 // Randomly sets the cell states
 void RandomState(struct Universe* u){
     for (int i = 0; i < u->length; ++i){
@@ -40,7 +46,7 @@ void Evolve(struct Universe* universe){
         r = universe->state[i + 1];
 
         ruleIndex = (l*4) + (c*2) + (r);        
-        newState[i] = universe->rule & (int)pow(2.0, (double)ruleIndex);
+        newState[i] = universe->rule & (1 << ruleIndex);
         ruleIndex = 0;
     }
     
