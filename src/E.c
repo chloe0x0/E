@@ -57,7 +57,7 @@ char* Universe2String(struct Universe* universe, bool displayEmpty){
     char* str = malloc( sizeof(char) * universe->length+1 );
     const char empty = displayEmpty ? '0' : ' '; 
 
-    for (int i = 0; i < universe->length; ++i){ str[i] = universe->state[i] ? '1' : empty; }
+    for (int i = 0; i <= universe->length; ++i){ str[i] = universe->state[i] ? '1' : empty; }
     str[universe->length + 1] = '\0';
 
     return str;
