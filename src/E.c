@@ -88,4 +88,6 @@ int main(int argc, char** argv){
         Evolve(u);
         printf("%s\n", Universe2String(u, false));
     }
+
+    FreeUniverse(u);
 }
