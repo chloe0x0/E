@@ -5,6 +5,11 @@
 #include <math.h>
 #include <time.h>
 
+#include <windows.h>
+
+// Time to sleep in milliseconds after printing the state
+#define SLEEP_MS 30
+
 struct Universe{ bool* state; uint8_t rule; unsigned int length; };
 
 struct Universe* ConstructUniverse(unsigned int len, uint8_t rule){
@@ -39,7 +44,7 @@ void Evolve(struct Universe* universe){
     int ruleIndex;
     bool* newState = calloc(universe->length, sizeof(bool));
 
-    for (int i = 1; i < universe->length; ++i){
+    for (int i = 2; i < universe->length; ++i){
         bool l, c, r;
         l = universe->state[i - 1];
         c = universe->state[i];
@@ -87,6 +92,7 @@ int main(int argc, char** argv){
     for (int i = 0; i < Epochs; ++i){
         Evolve(u);
         printf("%s\n", Universe2String(u, false));
+        Sleep(SLEEP_MS);
     }
 
     FreeUniverse(u);
