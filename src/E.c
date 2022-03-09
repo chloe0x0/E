@@ -44,9 +44,9 @@ void Evolve(struct Universe* universe){
     int ruleIndex;
     bool* newState = calloc(universe->length, sizeof(bool));
 
-    for (int i = 2; i < universe->length; ++i){
+    for (int i = 0; i <= universe->length; ++i){
         bool l, c, r;
-        l = universe->state[i - 1];
+        l = i ? universe->state[i - 1] : universe->state[universe->length];
         c = universe->state[i];
         r = universe->state[i + 1];
 
@@ -88,6 +88,14 @@ int main(int argc, char** argv){
     if (centered){ CenterState(u); }
     else { RandomState(u); }
 
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+    WORD saved_attributes;
+
+    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
+    saved_attributes = consoleInfo.wAttributes;
+
+    SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
     printf("%s\n", Universe2String(u, false));
     for (int i = 0; i < Epochs; ++i){
         Evolve(u);
@@ -95,5 +103,6 @@ int main(int argc, char** argv){
         Sleep(SLEEP_MS);
     }
 
+    SetConsoleTextAttribute(hConsole, saved_attributes);
     FreeUniverse(u);
 }
