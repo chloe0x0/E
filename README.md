@@ -41,6 +41,3 @@ E.exe <Number of Cells> <Rule Number> <Number of iterations to print> <1 or 0 in
    11 1111 11  111   1 11  1    1 11 1     11111   111
 
 ```
-
-## TODO
-> Write header file
