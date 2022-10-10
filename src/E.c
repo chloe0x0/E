@@ -2,11 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <math.h>
 #include <time.h>
-
-// Time to sleep in milliseconds after printing the state
-#define SLEEP_MS 30
 
 // Usage string
 #define USAGE "Usage: E <cells> <rule> <iterations> <init_state, 1 or 0>\nIf init state is 1, only the center cell is alive at start, otherwise cells are alive at random"
