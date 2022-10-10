@@ -5,14 +5,15 @@
 #include <math.h>
 #include <time.h>
 
-#include <windows.h>
-
 // Time to sleep in milliseconds after printing the state
 #define SLEEP_MS 30
 
-struct Universe{ bool* state; uint8_t rule; unsigned int length; };
+// Usage string
+#define USAGE "Usage: E <cells> <rule> <iterations> <init_state, 1 or 0>\nIf init state is 1, only the center cell is alive at start, otherwise cells are alive at random"
 
-struct Universe* ConstructUniverse(unsigned int len, uint8_t rule){
+struct Universe{ bool* state; uint8_t rule; size_t length; };
+
+struct Universe* ConstructUniverse(size_t len, uint8_t rule){
     struct Universe* u = malloc( sizeof(struct Universe) );
     u->state = calloc(len, sizeof(bool));
     u->rule = rule;
@@ -22,20 +23,20 @@ struct Universe* ConstructUniverse(unsigned int len, uint8_t rule){
 }
 
 // Function to free a Universe struct from memory
-void FreeUniverse(struct Universe* universe){
+inline void FreeUniverse(struct Universe* universe){
     free(universe->state);
     free(universe);
 }
 
 // Randomly sets the cell states
-void RandomState(struct Universe* u){
-    for (int i = 0; i < u->length; ++i){
+inline void RandomState(struct Universe* u){
+    for (size_t i = 0; i < u->length; ++i){
         u->state[i] = rand() % 2;
     }
 }
 
 // Sets only the center cell to true
-void CenterState(struct Universe* u){
+inline void CenterState(struct Universe* u){
     u->state[u->length / 2] = 1;
 }
 
@@ -44,7 +45,7 @@ void Evolve(struct Universe* universe){
     int ruleIndex;
     bool* newState = calloc(universe->length, sizeof(bool));
 
-    for (int i = 0; i <= universe->length; ++i){
+    for (size_t i = 0; i <= universe->length; ++i){
         bool l, c, r;
         l = i ? universe->state[i - 1] : universe->state[universe->length];
         c = universe->state[i];
@@ -62,23 +63,23 @@ char* Universe2String(struct Universe* universe, bool displayEmpty){
     char* str = malloc( sizeof(char) * universe->length+1 );
     const char empty = displayEmpty ? '0' : ' '; 
 
-    for (int i = 0; i <= universe->length; ++i){ str[i] = universe->state[i] ? '1' : empty; }
+    for (size_t i = 0; i <= universe->length; ++i){ str[i] = universe->state[i] ? '1' : empty; }
     str[universe->length + 1] = '\0';
 
     return str;
 }
 
-
 // E.exe <Length> <Rule> <Epochs> <Centered>
-int main(int argc, char** argv){
+int main(int argc, char* argv[]){
     if (argc < 5){
         fprintf(stderr, "Insufficient flags provided!\n");
+        fprintf(stderr, USAGE);
         exit(1);
     }
 
-    unsigned int Length = atoi(argv[1]);
+    size_t Length = atoi(argv[1]);
     uint8_t Rule = atoi(argv[2]);
-    unsigned int Epochs = atoi(argv[3]);
+    size_t Epochs = atoi(argv[3]);
     bool centered = atoi(argv[4]);
 
     srand(time(NULL));
@@ -88,21 +89,11 @@ int main(int argc, char** argv){
     if (centered){ CenterState(u); }
     else { RandomState(u); }
 
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
-
-    GetConsoleScreenBufferInfo(hConsole, &consoleInfo);
-    saved_attributes = consoleInfo.wAttributes;
-
-    SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
     printf("%s\n", Universe2String(u, false));
-    for (int i = 0; i < Epochs; ++i){
+    for (size_t i = 0; i < Epochs; ++i){
         Evolve(u);
         printf("%s\n", Universe2String(u, false));
-        Sleep(SLEEP_MS);
     }
 
-    SetConsoleTextAttribute(hConsole, saved_attributes);
     FreeUniverse(u);
 }
