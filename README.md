@@ -3,9 +3,18 @@ SImulating Elementary Cellular Automata in C
 
 # Usage
 
-## Format
+## Build with make
+```console
+git clone https://github.com/chloe0x0/E.git
+cd E
+make
 ```
-E.exe <Number of Cells> <Rule Number> <Number of iterations to print> <1 or 0 indicating wether or not to initialize only the center cell to true (otherwise random)>
+### If you don't have make
+
+just compile E.c
+
+```console
+gcc -O2 -o E src/E.c 
 ```
 
 ## Examples
